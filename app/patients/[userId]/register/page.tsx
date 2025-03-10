@@ -1,11 +1,8 @@
 import React from 'react';
 import Image from "next/image";
-import Link from "next/link";
 import RegisterForm from "@/components/forms/RegisterForm";
-import {getUser} from "@/lib/actions/patient.actions";
 
 const Register = async ({params: {userId}}: SearchParamProps) => {
-    const user = await getUser(userId);
     return (
         <div className="flex h-screen max-h-screen">
             <section className="remove-scrollbar container">
@@ -20,7 +17,7 @@ const Register = async ({params: {userId}}: SearchParamProps) => {
                         />
                         <h1 className="text-white text-2xl font-bold text-center mt-0.5 ml-3 tracking-wide">HealthVita</h1>
                     </div>
-                    <RegisterForm user={user} />
+                    <RegisterForm userId={userId} />
                         <p className="copyright py-12">
                             © 2025 HealthVita
                         </p>
