@@ -3,11 +3,12 @@
 import {
     APPOINTMENT_COLLECTION_ID,
     DATABASE_ID,
-    databases,
+    databases, messaging,
 } from "@/lib/appwrite.config";
 import {ID, Query} from "node-appwrite";
-import {parseStringify} from "@/lib/utils";
+import {formatDateTime, parseStringify} from "@/lib/utils";
 import {Appointment} from "@/types/appwrite.types";
+import {revalidatePath} from "next/cache";
 
 export const createAppointment = async (appointment: CreateAppointmentParams)=>  {
     try {
@@ -64,6 +65,42 @@ export const getRecentAppointmentList = async () => {
             documents: appointments.documents,
         }
         return parseStringify(data);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const updateAppointment = async ({ appointmentId, userId, appointment, type}: UpdateAppointmentParams) => {
+    try {
+      const updatedAppointment = await databases.updateDocument(
+          DATABASE_ID!,
+          APPOINTMENT_COLLECTION_ID!,
+          appointmentId,
+          appointment
+      )
+      if(!updatedAppointment) {
+          throw new Error("Error updating appointment");
+      }
+
+        const smsMessage = `Greetings from HealthVita. ${type === "schedule" ? `Your appointment has been confirmed for ${formatDateTime(appointment.schedule!).dateTime} with Dr. ${appointment.primaryPhysician}` : `We regret to inform that your appointment for ${formatDateTime(appointment.schedule!).dateTime} has been cancelled. Reason:  ${appointment.cancellationReason}`}`;
+        await sendSMSNotification(userId, smsMessage);
+
+      revalidatePath("/admin");
+      return parseStringify(updatedAppointment);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const sendSMSNotification = async (userId: string,content: string) => {
+    try {
+        const message = await messaging.createSms(
+            ID.unique(),
+            content,
+            [],
+            [userId]
+        )
+        return parseStringify(message);
     } catch (error) {
         console.log(error);
     }

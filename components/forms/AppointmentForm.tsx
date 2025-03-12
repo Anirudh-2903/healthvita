@@ -13,22 +13,21 @@ import {useRouter} from "next/navigation";
 import {Doctors} from "@/constants";
 import {SelectItem} from "@/components/ui/select";
 import Image from "next/image";
-import {createAppointment} from "@/lib/actions/appointment.actions";
+import {createAppointment, updateAppointment} from "@/lib/actions/appointment.actions";
+import {Appointment} from "@/types/appwrite.types";
 
 export enum FormFieldType {
-    INPUT = "input",
     TEXTAREA = "textarea",
-    PHONE_INPUT = "phoneInput",
-    CHECKBOX = "checkbox",
     DATE_PICKER = "datePicker",
     SELECT = "select",
-    SKELETON = "skeleton"
 }
 
-const AppointmentForm = ({userId,patientId,type}: {
+const AppointmentForm = ({userId,patientId,type,appointment,setOpen}: {
     userId: string,
     patientId: string,
     type: "create" | "cancel" | 'schedule',
+    appointment?: Appointment,
+    setOpen?: (open: boolean) => void
 }) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
@@ -38,10 +37,10 @@ const AppointmentForm = ({userId,patientId,type}: {
     const form = useForm<z.infer<typeof AppointmentFormValidation>>({
         resolver: zodResolver(AppointmentFormValidation),
         defaultValues: {
-            primaryPhysician: "",
-            schedule: new Date(),
-            reason: "",
-            note: "",
+            primaryPhysician: appointment ? appointment.primaryPhysician : "",
+            schedule: appointment ? new Date(appointment.schedule) : new Date(Date.now()),
+            reason: appointment ? appointment.reason : "",
+            note: appointment ? appointment.note : "",
             cancellationReason: "",
         },
     })
@@ -49,7 +48,7 @@ const AppointmentForm = ({userId,patientId,type}: {
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof AppointmentFormValidation>) {
         setIsLoading(true);
-
+        console.log("IM HERE",type)
         let status;
         switch (type) {
             case "cancel":
@@ -79,6 +78,25 @@ const AppointmentForm = ({userId,patientId,type}: {
                    form.reset();
                    router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`);
                }
+           } else {
+               const appointmentToUpdate = {
+                   userId,
+                   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+                   appointmentId: appointment?.$id!,
+                   appointment: {
+                       primaryPhysician: values?.primaryPhysician,
+                       schedule: new Date(values.schedule),
+                       status: status as Status,
+                       cancellationReason: values.cancellationReason,
+                   },
+                   type
+               }
+               const updatedAppointment = await updateAppointment(appointmentToUpdate);
+               if (updatedAppointment) {
+                   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                   setOpen && setOpen(false);
+                   form.reset();
+               }
            }
         } catch (error) {
             console.log(error);
@@ -104,10 +122,10 @@ const AppointmentForm = ({userId,patientId,type}: {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex-1">
-                <section className="mb-12 space-y-4">
+                {type === "create" && <section className="mb-12 space-y-4">
                     <h1 className="header">New Appointment</h1>
                     <p className="text-dark-700">Request a new appointment in one minute</p>
-                </section>
+                </section>}
 
                 {type !== "cancel" && (
                     <>
@@ -134,6 +152,15 @@ const AppointmentForm = ({userId,patientId,type}: {
                             ))}
                         </CustomFormField>
 
+                        <CustomFormField
+                            fieldType={FormFieldType.DATE_PICKER}
+                            control={form.control}
+                            name="schedule"
+                            label="Expected Appointment Date"
+                            showTimeSelect
+                            dateFormat="dd/MM/yyyy - h:mm aa"
+                        />
+
                         <div className="flex flex-col gap-6 xl:flex-row">
                             <CustomFormField
                                 fieldType={FormFieldType.TEXTAREA}
@@ -152,14 +179,6 @@ const AppointmentForm = ({userId,patientId,type}: {
                             />
                         </div>
 
-                        <CustomFormField
-                            fieldType={FormFieldType.DATE_PICKER}
-                            control={form.control}
-                            name="schedule"
-                            label="Expected Appointment Date"
-                            showTimeSelect
-                            dateFormat="dd/MM/yyyy - h:mm aa"
-                        />
                     </>
                 )}
 

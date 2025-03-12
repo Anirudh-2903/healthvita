@@ -69,7 +69,6 @@ const RegisterForm = ({userId}: {userId: string}) => {
                 disclosureConsent: values.disclosureConsent,
                 treatmentConsent: values.treatmentConsent,
             }
-            // @ts-ignore
             const patient = await registerPatient(patientData);
             if (patient) router.push(`/patients/${userId}/new-appointment`);
         } catch (error) {
