@@ -1,7 +1,7 @@
 <div align="center">
   <br />
     <a href="https://healthvita.anirudh-das.in" target="_blank">
-      <img src="https://github.com/adrianhajdin/healthcare/assets/151519281/a7dd73b6-93de-484d-84e0-e7f4e299167b" alt="Project Banner">
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/homepage.png" alt="Project Banner">
     </a>
   <br />
 
@@ -25,6 +25,12 @@
 
 ## <a name="introduction">🤖 Introduction</a>
 
+<div align="center">
+  <br />
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/homepage.png" alt="homepage">
+  <br />
+</div>
+
 A healthcare patient management application that allows patients to easily register, book, and manage their appointments with doctors, featuring administrative tools for scheduling, confirming, and canceling appointments, along with SMS notifications, all built using Next.js.
 
 ## <a name="tech-stack">⚙️ Tech Stack</a>
@@ -40,15 +46,52 @@ A healthcare patient management application that allows patients to easily regis
 
 👉 **Register as a Patient**: Users can sign up and create a personal profile as a patient.
 
+<div align="center">
+  <br />
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/register-1.png" alt="register-1">
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/register-2.png" alt="register-2">
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/register-3.png" alt="register-3">
+  <br />
+</div>
+
 👉 **Book a New Appointment with Doctor**: Patients can schedule appointments with doctors at their convenience and can book multiple appointments.
+
+
+<div align="center">
+  <br />
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/appointment.png" alt="appointment">
+  <br />
+  <br />
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/success.png" alt="success">
+  <br />
+</div>
 
 👉 **Manage Appointments on Admin Side**: Administrators can efficiently view and handle all scheduled appointments.
 
+<div align="center">
+  <br />
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/admin-login.png" alt="admin-login">
+  <br />
+  <br />
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/admin.png" alt="admin">
+  <br />
+</div>
+
 👉 **Confirm/Schedule Appointment from Admin Side**: Admins can confirm and set appointment times to ensure they are properly scheduled.
+
+<div align="center">
+  <br />
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/schedule.png" alt="schedule">
+  <br />
+</div>
 
 👉 **Cancel Appointment from Admin Side**: Administrators have the ability to cancel any appointment as needed.
 
-👉 **Send SMS on Appointment Confirmation**: Patients receive SMS notifications to confirm their appointment details.
+<div align="center">
+  <br />
+      <img src="https://github.com/Anirudh-2903/Project-Images/blob/master/HealthVita/cancel.png" alt="cancel">
+  <br />
+</div>
 
 👉 **Complete Responsiveness**: The application works seamlessly on all device types and screen sizes.
 
